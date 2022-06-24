@@ -30,7 +30,6 @@ lines = LOAD 'data.csv' USING PigStorage(',')
     );
 
 
-B = FOREACH lines GENERATE f2 AS (nombre:chararray), f5 AS (color:chararray);
-C = FILTER B BY STARTSWITH (nombre,'Z');
-
-STORE C INTO 'output';
+A = FOREACH lines GENERATE CONCAT(f2,' ',f5) AS columna;
+B = FILTER A BY STARTSWITH (columna,'Z');
+STORE B INTO 'output';
