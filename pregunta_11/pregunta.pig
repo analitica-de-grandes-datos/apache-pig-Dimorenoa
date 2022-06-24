@@ -32,4 +32,18 @@ $ pig -x local -f pregunta.pig
 
         >>> Escriba su respuesta a partir de este punto <<<
 */
+lines = LOAD 'data.csv' USING PigStorage(',')
+    AS (
+            f1:int,
+            f2:chararray,
+            f3:chararray,
+            f4:chararray,
+            f5:chararray,
+            f6:int
+    );
 
+
+B = FOREACH lines GENERATE f3 AS (apellido:chararray), UPPER(f3) AS (mayus:chararray), LOWER(f3) AS (minus:chararray);
+C = ORDER B BY apellido ASC;
+D = FOREACH C GENERATE CONCAT(apellido,',',mayus,',',minus);
+STORE D INTO 'output' USING PigStorage(',');
