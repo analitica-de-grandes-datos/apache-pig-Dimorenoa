@@ -21,4 +21,18 @@ $ pig -x local -f pregunta.pig
 
         >>> Escriba su respuesta a partir de este punto <<<
 */
+lines = LOAD 'data.csv' USING PigStorage(',')
+    AS (
+            f1:int,
+            f2:chararray,
+            f3:chararray,
+            f4:chararray,
+            f5:chararray,
+            f6:int
+    );
 
+
+B = FOREACH lines GENERATE f2 AS (nombre:chararray), f5 AS (color:chararray);
+C = FILTER B BY ENDSWITH (color,'a') OR ENDSWITH (color,'e') OR ENDSWITH (color,'i') OR ENDSWITH (color,'o') OR ENDSWITH (color,'u');
+
+STORE C INTO 'output' USING PigStorage(',');
