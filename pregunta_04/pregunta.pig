@@ -28,3 +28,26 @@ $ pig -x local -f pregunta.pig
 
          >>> Escriba su respuesta a partir de este punto <<<
 */
+truck_events = LOAD 'data.csv' USING PigStorage(',')
+    AS (
+            driverId:int,
+            truckId:int,
+            eventTime:chararray,
+            eventType:chararray,
+            longitude:double,
+            latitude:double,
+            eventKey:chararray,
+            correlationId:long,
+            driverName:chararray,
+            routeId:long,
+            routeName:chararray,
+            eventDate:chararray
+    );
+
+line = FOREACH truck_events GENERATE driverId,truckId,eventTime;
+
+primeros = LIMIT line 10;
+
+order_by = ORDER primeros BY driverId,truckId,eventTime ASC;
+
+STORE order_by INTO 'output' USING PigStorage(',');
